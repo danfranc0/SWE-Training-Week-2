@@ -1,22 +1,41 @@
-// web storage API
+// fetch API
+// callbacks, promises, thenable, async/await
 
-const myArray = ["eat", "sleep", "code"];
-const myObject = {
-    name: "Daniel",
-    hobbies: ["eat", "sleep", "code"],
-    logName: function() {
-        console.log(this.name);
-    }
+// promise states: Pending, Fulfilled, Rejected
+
+// abstract into functions
+
+const getDataFromForm = () => {
+    const requestObj = {
+        firstName: "Bruce",
+        lastName: "Lee",
+        categories: ["nerdy"]
+    };
+    return requestObj;
 }
 
-//sessionStorage.setItem("mySessionStore", JSON.stringify(myObject));
-//const mySessionStore = JSON.parse(sessionStorage.getItem("mySessionStore"));
-//console.log(mySessionStore);
+const buildRequestUrl = (requestData) => {
+    return `http://api.icndb.com/jokes/random?firstname=${requestData.firstName}&
+    lastName=${requestData.lastName}&limitTo=${requestData.catergories}`
+}
 
-// local (persistent data)
-localStorage.setItem("myLocalStore", JSON.stringify(myObject));
-const storeLength = localStorage.length;
-const myLocalStore = JSON.parse(localStorage.getItem("myLocalStore"));
+const requestJoke = async (url) => {
+    const response = await fetch(url);
+    const jsonResponse = await response.json();
+    const joke = jsonResponse.value.joke;
+    postToWebPage(joke);
+}
 
-console.log(storeLength);
+const postToWebPage = (data) => {
+    console.log(data);
+}
 
+// Procedural "workflow" function
+const processJokeRequest = async () => {
+    const requestData = getDataFromForm();
+    const requestUrl = buildRequestUrl(requestData);
+    await requestJoke(requestUrl); 
+    console.log("finished");
+}
+
+processJokeRequest();
